@@ -1,219 +1,922 @@
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptMaster Pro - Collection de 100 Prompts Professionnels</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --dark: #1d3557;
+            --light: #f8f9fa;
+            --success: #2ec4b6;
+            --text: #333333;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --card-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
 
-const prompts = [
-  {
-    category: "🚀 Business & Entrepreneuriat",
-    items: [
-      "Agis comme un coach business expert et aide-moi à créer une stratégie de croissance pour mon entreprise de [secteur].",
-      "Identifie les 5 niches les plus rentables en ce moment dans le domaine du digital.",
-      "Donne-moi 10 idées d’offres irrésistibles à vendre dans ma boutique en ligne.",
-      "Crée un business model innovant basé sur les tendances de consommation actuelles.",
-      "Liste-moi les étapes exactes pour lancer un produit digital en 7 jours.",
-      "Crée un tunnel de vente complet pour vendre une formation à 97€.",
-      "Analyse les faiblesses de mon business et propose des actions concrètes.",
-      "Joue le rôle d’un investisseur : quel pitch serait irrésistible pour toi ?",
-      "Rédige-moi un plan d’action pour générer mes premiers 10 000€ en ligne.",
-      "Imagine un concept de start-up originale dans l’univers de l’IA ou du Web3.",
-    ],
-  },
-  {
-    category: "📱 Marketing & Réseaux Sociaux",
-    items: [
-      "Crée un calendrier éditorial Instagram sur 30 jours autour de la thématique [x].",
-      "Rédige 10 légendes virales pour TikTok autour du développement personnel.",
-      "Génère des hooks puissants pour capter l’attention en vidéo dès les 3 premières secondes.",
-      "Donne-moi 20 idées de carrousels éducatifs pour LinkedIn.",
-      "Planifie une campagne d’email marketing complète pour lancer un nouveau produit.",
-      "Simule une publicité Facebook efficace pour un coach sportif.",
-      "Crée une bio Instagram optimisée pour vendre mes services.",
-      "Fais-moi un audit express de mon compte Twitter (engagement, contenu, tonalité).",
-      "Rédige-moi un post viral autour de l’actualité tech.",
-      "Crée une stratégie de contenu basée sur le storytelling émotionnel.",
-    ],
-  },
-  {
-    category: "🧠 Productivité & Organisation",
-    items: [
-      "Crée une routine matinale ultra-efficace pour entrepreneur ambitieux.",
-      "Optimise mon emploi du temps avec la méthode du time-blocking.",
-      "Rédige un plan de travail pour accomplir un projet en 10 jours.",
-      "Décris-moi la méthode la plus efficace pour vaincre la procrastination.",
-      "Construis-moi un tableau de bord Notion pour gérer mes objectifs mensuels.",
-      "Agis comme un coach de productivité et aide-moi à organiser mes priorités.",
-      "Donne-moi une liste d’outils IA qui automatisent mes tâches quotidiennes.",
-      "Crée une checklist complète pour le lancement d’un produit.",
-      "Propose-moi un plan de délégation pour libérer 10h par semaine.",
-      "Aide-moi à bâtir un système personnel anti-distraction.",
-    ],
-  },
-  {
-    category: "🧠 Développement Personnel & Mindset",
-    items: [
-      "Aide-moi à identifier mes croyances limitantes liées à l’argent.",
-      "Donne-moi 5 exercices journaliers pour développer ma confiance en moi.",
-      "Crée une visualisation guidée pour atteindre mes objectifs.",
-      "Rédige des affirmations puissantes autour de l’abondance.",
-      "Fais-moi un plan d’auto-discipline en 30 jours.",
-      "Joue le rôle d’un mentor et encourage-moi face à un échec.",
-      "Donne-moi une liste de 10 habitudes à adopter pour passer au niveau supérieur.",
-      "Rédige un script pour un journal de gratitude quotidien.",
-      "Inspire-moi avec un discours motivant à lire chaque matin.",
-      "Crée un tableau de vision numérique interactif.",
-    ],
-  },
-  {
-    category: "✍️ Création de Contenu & Copywriting",
-    items: [
-      "Rédige une page de vente pour un ebook sur la nutrition.",
-      "Génère 10 accroches marketing ultra percutantes.",
-      "Crée une histoire persuasive pour vendre une formation de coaching.",
-      "Propose 5 headlines captivantes pour un article de blog sur l’IA.",
-      "Crée un lead magnet original dans le domaine de la finance personnelle.",
-      "Rédige une séquence email de bienvenue pour une newsletter business.",
-      "Décompose les émotions que doit susciter une bonne page de vente.",
-      "Écris un script vidéo de 1 min pour promouvoir un produit digital.",
-      "Crée un swipe file de 10 CTA irrésistibles.",
-      "Analyse et réécris un texte de vente en version plus émotionnelle.",
-    ],
-  },
-  {
-    category: "📚 Formation, Coaching, Éducation",
-    items: [
-      "Crée une structure complète de formation en ligne sur le thème de [x].",
-      "Prépare-moi un quiz d’évaluation pour mes élèves.",
-      "Donne-moi des idées d’activités interactives pour animer un atelier.",
-      "Aide-moi à concevoir une offre de coaching en 3 niveaux.",
-      "Rédige une fiche pédagogique pour enseigner la prise de parole en public.",
-      "Simule une session de coaching avec un client bloqué par la peur de l’échec.",
-      "Propose un plan de contenu pour un bootcamp intensif de 7 jours.",
-      "Génère 5 exercices de groupe autour du leadership.",
-      "Structure une masterclass avec script, visuels et plan d’action.",
-      "Crée une évaluation de fin de formation automatisée.",
-    ],
-  },
-  {
-    category: "🌍 IA, Tech & Automatisation",
-    items: [
-      "Donne-moi 10 cas d’usage concrets de l’IA dans une PME.",
-      "Crée un chatbot pour répondre automatiquement aux questions clients.",
-      "Simule un outil IA qui automatise la rédaction de contenu.",
-      "Génère un prompt pour automatiser la gestion des réponses email.",
-      "Donne-moi une liste de 20 outils IA incontournables.",
-      "Crée un scénario d’automatisation avec Zapier pour vendre un produit.",
-      "Décris les étapes pour entraîner un assistant IA personnalisé.",
-      "Aide-moi à créer un prompt évolutif pour générer des idées de contenu.",
-      "Agis comme un consultant en no-code : crée une app MVP avec Glide.",
-      "Rédige un prompt pour transformer un texte en visuel Midjourney ou Dall·E.",
-    ],
-  },
-  {
-    category: "💰 Finance, Argent & Mindset financier",
-    items: [
-      "Crée un plan pour atteindre l’indépendance financière en 3 ans.",
-      "Aide-moi à automatiser ma gestion budgétaire mensuelle.",
-      "Propose un tableau de suivi des revenus passifs.",
-      "Donne-moi des idées d’investissement low-risk à 5 ans.",
-      "Liste les erreurs courantes qui freinent l’enrichissement.",
-      "Simule une séance de coaching autour du rapport à l’argent.",
-      "Crée un budget de lancement pour une micro-entreprise.",
-      "Propose un plan pour sortir des dettes en 6 mois.",
-      "Rédige une stratégie pour économiser 30% de mes revenus.",
-      "Crée un plan de tarification pour des services en ligne haut de gamme.",
-    ],
-  },
-  {
-    category: "🧳 Vie & Lifestyle (Bonus)",
-    items: [
-      "Crée un itinéraire de 10 jours pour découvrir Bali.",
-      "Aide-moi à planifier une semaine detox digitale.",
-      "Rédige une liste de 20 idées de week-ends “slow life”.",
-      "Simule un dialogue pour apprendre le français en 30 jours.",
-      "Propose un plan d’entrainement à faire chez soi sans équipement.",
-      "Fais une liste de 15 idées de repas healthy et économiques.",
-      "Crée un challenge bien-être sur 21 jours.",
-      "Crée un journal de bord pour les voyages.",
-      "Aide-moi à planifier ma semaine parfaite.",
-      "Donne-moi 10 idées de side-projects fun et monétisables.",
-    ],
-  },
-  {
-    category: "🧩 Prompts Meta & Création de Prompts",
-    items: [
-      "Crée un générateur de prompts automatique pour Instagram.",
-      "Rédige-moi un prompt pour générer un persona client ultra précis.",
-      "Donne-moi un template de prompt pour créer des scripts vidéos.",
-      "Propose un prompt pour créer des visuels d’affiches publicitaires.",
-      "Crée un prompt qui transforme une idée en produit digital.",
-      "Conçois un prompt pour faire de l’idéation de contenu long format.",
-      "Génère un prompt qui adapte un article en format tweet thread.",
-      "Écris un prompt qui résume un document PDF automatiquement.",
-      "Crée un prompt qui transforme des données Excel en infographies.",
-      "Fais-moi un prompt qui m’aide à créer… des prompts rentables à vendre !",
-    ],
-  },
-];
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-const App = () => {
-  const [search, setSearch] = useState("");
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-  const handleCopy = (text) => {
-    navigator.clipboard.writeText(text);
-    alert("✅ Prompt copié !");
-  };
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-50 p-6">
-      <header className="text-center mb-10">
-        <h1 className="text-4xl font-bold mb-2 text-purple-700">
-          🧠 Bibliothèque de Prompts
-        </h1>
-        <p className="text-lg text-gray-600">
-          100 prompts prêts à l’emploi pour booster ton business, ton mindset et ta productivité.
-        </p>
-        <div className="mt-4 flex justify-center">
-          <Input
-            className="max-w-md"
-            placeholder="Rechercher un prompt..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+            pointer-events: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            background: white;
+            color: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .logo h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .intro {
+            text-align: center;
+            padding: 2rem 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .intro h2 {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .intro h2::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .intro p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            min-width: 160px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            line-height: 1;
+        }
+
+        .stat-card .label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+        .category-header {
+            padding: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .category-header h3 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-header i {
+            font-size: 1.8rem;
+        }
+
+        .prompts-list {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .prompt-item {
+            background: var(--light);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .prompt-item:hover {
+            background: #edf2ff;
+            transform: translateX(5px);
+        }
+
+        .prompt-number {
+            position: absolute;
+            top: -12px;
+            left: -12px;
+            background: var(--accent);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .prompt-text {
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+        }
+
+        .copy-btn i {
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+
+        .cta {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(to right, #2a2d72, #3a3f9b);
+            color: white;
+            margin-top: 2rem;
+        }
+
+        .cta h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.25);
+            color: var(--secondary);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 2rem 0;
+        }
+
+        .page-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .page-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .page-btn i {
+            font-size: 1rem;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .counter {
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .logo h1 {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .stats {
+                gap: 1rem;
+            }
+            
+            .stat-card {
+                min-width: 130px;
+                padding: 1rem;
+            }
+            
+            .stat-card .number {
+                font-size: 1.8rem;
+            }
+            
+            .categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-lightbulb"></i>
+                <h1>PromptMaster Pro</h1>
+            </div>
+            <p class="tagline">Collection exclusive de 100 prompts pour booster votre business, marketing, productivité et créativité</p>
         </div>
-      </header>
+    </header>
 
-      {prompts.map((section) => (
-        <div key={section.category} className="mb-8">
-          <h2 className="text-2xl font-semibold text-blue-600 mb-4">
-            {section.category}
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {section.items
-              .filter((item) =>
-                item.toLowerCase().includes(search.toLowerCase())
-              )
-              .map((item, idx) => (
-                <Card
-                  key={idx}
-                  className="hover:shadow-xl transition rounded-xl p-4 bg-white"
-                >
-                  <CardContent>
-                    <p className="text-gray-800 mb-3">{item}</p>
-                    <Button
-                      className="w-full"
-                      onClick={() => handleCopy(item)}
-                    >
-                      Copier le prompt
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-          </div>
+    <section class="intro">
+        <div class="container">
+            <h2>Votre Boîte à Outils Créative</h2>
+            <p>Découvrez une collection minutieusement organisée de prompts qui transformeront votre façon de travailler, créer et vendre. Copiez-les en un clic et intégrez-les à vos outils préférés.</p>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <i class="fas fa-gem"></i>
+                    <div class="number">100</div>
+                    <div class="label">Prompts Professionnels</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-layer-group"></i>
+                    <div class="number">10</div>
+                    <div class="label">Catégories Spécialisées</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-rocket"></i>
+                    <div class="number">1</div>
+                    <div class="label">Clic pour Copier</div>
+                </div>
+            </div>
         </div>
-      ))}
+    </section>
+
+    <div class="pagination">
+        <button id="page1Btn" class="page-btn active"><i class="fas fa-star"></i> Page 1 (1-50)</button>
+        <button id="page2Btn" class="page-btn"><i class="fas fa-arrow-right"></i> Page 2 (51-100)</button>
     </div>
-  );
-};
 
-export default App;
+    <!-- Page 1 (Prompts 1-50) -->
+    <div id="page1" class="page active">
+        <div class="container">
+            <div class="counter">Affichage des prompts 1 à 50</div>
+            <div class="categories">
+                <!-- Catégorie 1 -->
+                <div class="category-card">
+                    <div class="category-header">
+                        <h3><i class="fas fa-chart-line"></i> Business & Entrepreneuriat</h3>
+                    </div>
+                    <div class="prompts-list">
+                        <div class="prompt-item">
+                            <div class="prompt-number">1</div>
+                            <p class="prompt-text">Agis comme un coach business expert et aide-moi à créer une stratégie de croissance pour mon entreprise de [secteur].</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">2</div>
+                            <p class="prompt-text">Identifie les 5 niches les plus rentables en ce moment dans le domaine du digital.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">3</div>
+                            <p class="prompt-text">Donne-moi 10 idées d'offres irrésistibles à vendre dans ma boutique en ligne.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">4</div>
+                            <p class="prompt-text">Crée un business model innovant basé sur les tendances de consommation actuelles.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">5</div>
+                            <p class="prompt-text">Liste-moi les étapes exactes pour lancer un produit digital en 7 jours.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catégorie 2 -->
+                <div class="category-card">
+                    <div class="category-header">
+                        <h3><i class="fas fa-hashtag"></i> Marketing & Réseaux Sociaux</h3>
+                    </div>
+                    <div class="prompts-list">
+                        <div class="prompt-item">
+                            <div class="prompt-number">11</div>
+                            <p class="prompt-text">Crée un calendrier éditorial Instagram sur 30 jours autour de la thématique [x].</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">12</div>
+                            <p class="prompt-text">Rédige 10 légendes virales pour TikTok autour du développement personnel.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">13</div>
+                            <p class="prompt-text">Génère des hooks puissants pour capter l'attention en vidéo dès les 3 premières secondes.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">14</div>
+                            <p class="prompt-text">Donne-moi 20 idées de carrousels éducatifs pour LinkedIn.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">15</div>
+                            <p class="prompt-text">Planifie une campagne d'email marketing complète pour lancer un nouveau produit.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catégorie 3 -->
+                <div class="category-card">
+                    <div class="category-header">
+                        <h3><i class="fas fa-tasks"></i> Productivité & Organisation</h3>
+                    </div>
+                    <div class="prompts-list">
+                        <div class="prompt-item">
+                            <div class="prompt-number">21</div>
+                            <p class="prompt-text">Crée une routine matinale ultra-efficace pour entrepreneur ambitieux.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">22</div>
+                            <p class="prompt-text">Optimise mon emploi du temps avec la méthode du time-blocking.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">23</div>
+                            <p class="prompt-text">Rédige un plan de travail pour accomplir un projet en 10 jours.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">24</div>
+                            <p class="prompt-text">Décris-moi la méthode la plus efficace pour vaincre la procrastination.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">25</div>
+                            <p class="prompt-text">Construis-moi un tableau de bord Notion pour gérer mes objectifs mensuels.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catégorie 4 -->
+                <div class="category-card">
+                    <div class="category-header">
+                        <h3><i class="fas fa-brain"></i> Développement Personnel</h3>
+                    </div>
+                    <div class="prompts-list">
+                        <div class="prompt-item">
+                            <div class="prompt-number">31</div>
+                            <p class="prompt-text">Aide-moi à identifier mes croyances limitantes liées à l'argent.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">32</div>
+                            <p class="prompt-text">Donne-moi 5 exercices journaliers pour développer ma confiance en moi.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">33</div>
+                            <p class="prompt-text">Crée une visualisation guidée pour atteindre mes objectifs.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">34</div>
+                            <p class="prompt-text">Rédige des affirmations puissantes autour de l'abondance.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">35</div>
+                            <p class="prompt-text">Fais-moi un plan d'auto-discipline en 30 jours.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catégorie 5 -->
+                <div class="category-card">
+                    <div class="category-header">
+                        <h3><i class="fas fa-feather"></i> Création de Contenu</h3>
+                    </div>
+                    <div class="prompts-list">
+                        <div class="prompt-item">
+                            <div class="prompt-number">41</div>
+                            <p class="prompt-text">Rédige une page de vente pour un ebook sur la nutrition.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">42</div>
+                            <p class="prompt-text">Génère 10 accroches marketing ultra percutantes.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">43</div>
+                            <p class="prompt-text">Crée une histoire persuasive pour vendre une formation de coaching.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">44</div>
+                            <p class="prompt-text">Propose 5 headlines captivantes pour un article de blog sur l'IA.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">45</div>
+                            <p class="prompt-text">Crée un lead magnet original dans le domaine de la finance personnelle.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2 (Prompts 51-100) -->
+    <div id="page2" class="page">
+        <div class="container">
+            <div class="counter">Affichage des prompts 51 à 100</div>
+            <div class="categories">
+                <!-- Catégorie 6 -->
+                <div class="category-card">
+                    <div class="category-header">
+                        <h3><i class="fas fa-graduation-cap"></i> Formation & Coaching</h3>
+                    </div>
+                    <div class="prompts-list">
+                        <div class="prompt-item">
+                            <div class="prompt-number">51</div>
+                            <p class="prompt-text">Crée une structure complète de formation en ligne sur le thème de [x].</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">52</div>
+                            <p class="prompt-text">Prépare-moi un quiz d'évaluation pour mes élèves.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">53</div>
+                            <p class="prompt-text">Donne-moi des idées d'activités interactives pour animer un atelier.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">54</div>
+                            <p class="prompt-text">Aide-moi à concevoir une offre de coaching en 3 niveaux.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">55</div>
+                            <p class="prompt-text">Rédige une fiche pédagogique pour enseigner la prise de parole en public.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catégorie 7 -->
+                <div class="category-card">
+                    <div class="category-header">
+                        <h3><i class="fas fa-robot"></i> IA, Tech & Automatisation</h3>
+                    </div>
+                    <div class="prompts-list">
+                        <div class="prompt-item">
+                            <div class="prompt-number">61</div>
+                            <p class="prompt-text">Donne-moi 10 cas d'usage concrets de l'IA dans une PME.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">62</div>
+                            <p class="prompt-text">Crée un chatbot pour répondre automatiquement aux questions clients.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">63</div>
+                            <p class="prompt-text">Simule un outil IA qui automatise la rédaction de contenu.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">64</div>
+                            <p class="prompt-text">Génère un prompt pour automatiser la gestion des réponses email.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">65</div>
+                            <p class="prompt-text">Donne-moi une liste de 20 outils IA incontournables.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catégorie 8 -->
+                <div class="category-card">
+                    <div class="category-header">
+                        <h3><i class="fas fa-coins"></i> Finance & Argent</h3>
+                    </div>
+                    <div class="prompts-list">
+                        <div class="prompt-item">
+                            <div class="prompt-number">71</div>
+                            <p class="prompt-text">Crée un plan pour atteindre l'indépendance financière en 3 ans.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">72</div>
+                            <p class="prompt-text">Aide-moi à automatiser ma gestion budgétaire mensuelle.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">73</div>
+                            <p class="prompt-text">Propose un tableau de suivi des revenus passifs.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">74</div>
+                            <p class="prompt-text">Donne-moi des idées d'investissement low-risk à 5 ans.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">75</div>
+                            <p class="prompt-text">Liste les erreurs courantes qui freinent l'enrichissement.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catégorie 9 -->
+                <div class="category-card">
+                    <div class="category-header">
+                        <h3><i class="fas fa-globe-americas"></i> Vie & Lifestyle</h3>
+                    </div>
+                    <div class="prompts-list">
+                        <div class="prompt-item">
+                            <div class="prompt-number">81</div>
+                            <p class="prompt-text">Crée un itinéraire de 10 jours pour découvrir Bali.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">82</div>
+                            <p class="prompt-text">Aide-moi à planifier une semaine detox digitale.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">83</div>
+                            <p class="prompt-text">Rédige une liste de 20 idées de week-ends "slow life".</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">84</div>
+                            <p class="prompt-text">Simule un dialogue pour apprendre le français en 30 jours.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">85</div>
+                            <p class="prompt-text">Propose un plan d'entrainement à faire chez soi sans équipement.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catégorie 10 -->
+                <div class="category-card">
+                    <div class="category-header">
+                        <h3><i class="fas fa-cogs"></i> Prompts Meta</h3>
+                    </div>
+                    <div class="prompts-list">
+                        <div class="prompt-item">
+                            <div class="prompt-number">91</div>
+                            <p class="prompt-text">Crée un générateur de prompts automatique pour Instagram.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">92</div>
+                            <p class="prompt-text">Rédige-moi un prompt pour générer un persona client ultra précis.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">93</div>
+                            <p class="prompt-text">Donne-moi un template de prompt pour créer des scripts vidéos.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">94</div>
+                            <p class="prompt-text">Propose un prompt pour créer des visuels d'affiches publicitaires.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                        <div class="prompt-item">
+                            <div class="prompt-number">95</div>
+                            <p class="prompt-text">Crée un prompt qui transforme une idée en produit digital.</p>
+                            <button class="copy-btn"><i class="fas fa-copy"></i> Copier</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Prêt à booster votre productivité créative ?</h2>
+            <p>Cette collection exclusive de 100 prompts est disponible immédiatement après achat. Transformez votre workflow et créez du contenu de qualité en quelques secondes.</p>
+            <a href="#" class="btn">Acheter Maintenant <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 PromptMaster Pro. Tous droits réservés.</p>
+            <p>Produit digital conçu pour les créateurs et entrepreneurs ambitieux.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fonction de copie des prompts
+            const copyButtons = document.querySelectorAll('.copy-btn');
+            
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const promptItem = this.closest('.prompt-item');
+                    const promptText = promptItem.querySelector('.prompt-text').textContent;
+                    
+                    // Copie dans le presse-papiers
+                    navigator.clipboard.writeText(promptText).then(() => {
+                        // Animation de confirmation
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<i class="fas fa-check"></i> Copié !';
+                        this.classList.add('copied');
+                        
+                        // Réinitialiser après 2 secondes
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.classList.remove('copied');
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Erreur lors de la copie: ', err);
+                        this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erreur';
+                        setTimeout(() => {
+                            this.innerHTML = '<i class="fas fa-copy"></i> Copier';
+                        }, 2000);
+                    });
+                });
+            });
+            
+            // Gestion de la pagination
+            const page1Btn = document.getElementById('page1Btn');
+            const page2Btn = document.getElementById('page2Btn');
+            const page1 = document.getElementById('page1');
+            const page2 = document.getElementById('page2');
+            
+            page1Btn.addEventListener('click', () => {
+                page1.classList.add('active');
+                page2.classList.remove('active');
+                page1Btn.classList.add('active');
+                page2Btn.classList.remove('active');
+            });
+            
+            page2Btn.addEventListener('click', () => {
+                page1.classList.remove('active');
+                page2.classList.add('active');
+                page1Btn.classList.remove('active');
+                page2Btn.classList.add('active');
+            });
+            
+            // Animation au défilement
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Appliquer aux éléments
+            document.querySelectorAll('.category-card, .stat-card, .intro h2, .intro p').forEach(el => {
+                el.style.opacity = 0;
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
