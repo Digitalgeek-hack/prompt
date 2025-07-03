@@ -1,0 +1,219 @@
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+const prompts = [
+  {
+    category: "🚀 Business & Entrepreneuriat",
+    items: [
+      "Agis comme un coach business expert et aide-moi à créer une stratégie de croissance pour mon entreprise de [secteur].",
+      "Identifie les 5 niches les plus rentables en ce moment dans le domaine du digital.",
+      "Donne-moi 10 idées d’offres irrésistibles à vendre dans ma boutique en ligne.",
+      "Crée un business model innovant basé sur les tendances de consommation actuelles.",
+      "Liste-moi les étapes exactes pour lancer un produit digital en 7 jours.",
+      "Crée un tunnel de vente complet pour vendre une formation à 97€.",
+      "Analyse les faiblesses de mon business et propose des actions concrètes.",
+      "Joue le rôle d’un investisseur : quel pitch serait irrésistible pour toi ?",
+      "Rédige-moi un plan d’action pour générer mes premiers 10 000€ en ligne.",
+      "Imagine un concept de start-up originale dans l’univers de l’IA ou du Web3.",
+    ],
+  },
+  {
+    category: "📱 Marketing & Réseaux Sociaux",
+    items: [
+      "Crée un calendrier éditorial Instagram sur 30 jours autour de la thématique [x].",
+      "Rédige 10 légendes virales pour TikTok autour du développement personnel.",
+      "Génère des hooks puissants pour capter l’attention en vidéo dès les 3 premières secondes.",
+      "Donne-moi 20 idées de carrousels éducatifs pour LinkedIn.",
+      "Planifie une campagne d’email marketing complète pour lancer un nouveau produit.",
+      "Simule une publicité Facebook efficace pour un coach sportif.",
+      "Crée une bio Instagram optimisée pour vendre mes services.",
+      "Fais-moi un audit express de mon compte Twitter (engagement, contenu, tonalité).",
+      "Rédige-moi un post viral autour de l’actualité tech.",
+      "Crée une stratégie de contenu basée sur le storytelling émotionnel.",
+    ],
+  },
+  {
+    category: "🧠 Productivité & Organisation",
+    items: [
+      "Crée une routine matinale ultra-efficace pour entrepreneur ambitieux.",
+      "Optimise mon emploi du temps avec la méthode du time-blocking.",
+      "Rédige un plan de travail pour accomplir un projet en 10 jours.",
+      "Décris-moi la méthode la plus efficace pour vaincre la procrastination.",
+      "Construis-moi un tableau de bord Notion pour gérer mes objectifs mensuels.",
+      "Agis comme un coach de productivité et aide-moi à organiser mes priorités.",
+      "Donne-moi une liste d’outils IA qui automatisent mes tâches quotidiennes.",
+      "Crée une checklist complète pour le lancement d’un produit.",
+      "Propose-moi un plan de délégation pour libérer 10h par semaine.",
+      "Aide-moi à bâtir un système personnel anti-distraction.",
+    ],
+  },
+  {
+    category: "🧠 Développement Personnel & Mindset",
+    items: [
+      "Aide-moi à identifier mes croyances limitantes liées à l’argent.",
+      "Donne-moi 5 exercices journaliers pour développer ma confiance en moi.",
+      "Crée une visualisation guidée pour atteindre mes objectifs.",
+      "Rédige des affirmations puissantes autour de l’abondance.",
+      "Fais-moi un plan d’auto-discipline en 30 jours.",
+      "Joue le rôle d’un mentor et encourage-moi face à un échec.",
+      "Donne-moi une liste de 10 habitudes à adopter pour passer au niveau supérieur.",
+      "Rédige un script pour un journal de gratitude quotidien.",
+      "Inspire-moi avec un discours motivant à lire chaque matin.",
+      "Crée un tableau de vision numérique interactif.",
+    ],
+  },
+  {
+    category: "✍️ Création de Contenu & Copywriting",
+    items: [
+      "Rédige une page de vente pour un ebook sur la nutrition.",
+      "Génère 10 accroches marketing ultra percutantes.",
+      "Crée une histoire persuasive pour vendre une formation de coaching.",
+      "Propose 5 headlines captivantes pour un article de blog sur l’IA.",
+      "Crée un lead magnet original dans le domaine de la finance personnelle.",
+      "Rédige une séquence email de bienvenue pour une newsletter business.",
+      "Décompose les émotions que doit susciter une bonne page de vente.",
+      "Écris un script vidéo de 1 min pour promouvoir un produit digital.",
+      "Crée un swipe file de 10 CTA irrésistibles.",
+      "Analyse et réécris un texte de vente en version plus émotionnelle.",
+    ],
+  },
+  {
+    category: "📚 Formation, Coaching, Éducation",
+    items: [
+      "Crée une structure complète de formation en ligne sur le thème de [x].",
+      "Prépare-moi un quiz d’évaluation pour mes élèves.",
+      "Donne-moi des idées d’activités interactives pour animer un atelier.",
+      "Aide-moi à concevoir une offre de coaching en 3 niveaux.",
+      "Rédige une fiche pédagogique pour enseigner la prise de parole en public.",
+      "Simule une session de coaching avec un client bloqué par la peur de l’échec.",
+      "Propose un plan de contenu pour un bootcamp intensif de 7 jours.",
+      "Génère 5 exercices de groupe autour du leadership.",
+      "Structure une masterclass avec script, visuels et plan d’action.",
+      "Crée une évaluation de fin de formation automatisée.",
+    ],
+  },
+  {
+    category: "🌍 IA, Tech & Automatisation",
+    items: [
+      "Donne-moi 10 cas d’usage concrets de l’IA dans une PME.",
+      "Crée un chatbot pour répondre automatiquement aux questions clients.",
+      "Simule un outil IA qui automatise la rédaction de contenu.",
+      "Génère un prompt pour automatiser la gestion des réponses email.",
+      "Donne-moi une liste de 20 outils IA incontournables.",
+      "Crée un scénario d’automatisation avec Zapier pour vendre un produit.",
+      "Décris les étapes pour entraîner un assistant IA personnalisé.",
+      "Aide-moi à créer un prompt évolutif pour générer des idées de contenu.",
+      "Agis comme un consultant en no-code : crée une app MVP avec Glide.",
+      "Rédige un prompt pour transformer un texte en visuel Midjourney ou Dall·E.",
+    ],
+  },
+  {
+    category: "💰 Finance, Argent & Mindset financier",
+    items: [
+      "Crée un plan pour atteindre l’indépendance financière en 3 ans.",
+      "Aide-moi à automatiser ma gestion budgétaire mensuelle.",
+      "Propose un tableau de suivi des revenus passifs.",
+      "Donne-moi des idées d’investissement low-risk à 5 ans.",
+      "Liste les erreurs courantes qui freinent l’enrichissement.",
+      "Simule une séance de coaching autour du rapport à l’argent.",
+      "Crée un budget de lancement pour une micro-entreprise.",
+      "Propose un plan pour sortir des dettes en 6 mois.",
+      "Rédige une stratégie pour économiser 30% de mes revenus.",
+      "Crée un plan de tarification pour des services en ligne haut de gamme.",
+    ],
+  },
+  {
+    category: "🧳 Vie & Lifestyle (Bonus)",
+    items: [
+      "Crée un itinéraire de 10 jours pour découvrir Bali.",
+      "Aide-moi à planifier une semaine detox digitale.",
+      "Rédige une liste de 20 idées de week-ends “slow life”.",
+      "Simule un dialogue pour apprendre le français en 30 jours.",
+      "Propose un plan d’entrainement à faire chez soi sans équipement.",
+      "Fais une liste de 15 idées de repas healthy et économiques.",
+      "Crée un challenge bien-être sur 21 jours.",
+      "Crée un journal de bord pour les voyages.",
+      "Aide-moi à planifier ma semaine parfaite.",
+      "Donne-moi 10 idées de side-projects fun et monétisables.",
+    ],
+  },
+  {
+    category: "🧩 Prompts Meta & Création de Prompts",
+    items: [
+      "Crée un générateur de prompts automatique pour Instagram.",
+      "Rédige-moi un prompt pour générer un persona client ultra précis.",
+      "Donne-moi un template de prompt pour créer des scripts vidéos.",
+      "Propose un prompt pour créer des visuels d’affiches publicitaires.",
+      "Crée un prompt qui transforme une idée en produit digital.",
+      "Conçois un prompt pour faire de l’idéation de contenu long format.",
+      "Génère un prompt qui adapte un article en format tweet thread.",
+      "Écris un prompt qui résume un document PDF automatiquement.",
+      "Crée un prompt qui transforme des données Excel en infographies.",
+      "Fais-moi un prompt qui m’aide à créer… des prompts rentables à vendre !",
+    ],
+  },
+];
+
+const App = () => {
+  const [search, setSearch] = useState("");
+
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text);
+    alert("✅ Prompt copié !");
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-50 p-6">
+      <header className="text-center mb-10">
+        <h1 className="text-4xl font-bold mb-2 text-purple-700">
+          🧠 Bibliothèque de Prompts
+        </h1>
+        <p className="text-lg text-gray-600">
+          100 prompts prêts à l’emploi pour booster ton business, ton mindset et ta productivité.
+        </p>
+        <div className="mt-4 flex justify-center">
+          <Input
+            className="max-w-md"
+            placeholder="Rechercher un prompt..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+      </header>
+
+      {prompts.map((section) => (
+        <div key={section.category} className="mb-8">
+          <h2 className="text-2xl font-semibold text-blue-600 mb-4">
+            {section.category}
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {section.items
+              .filter((item) =>
+                item.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((item, idx) => (
+                <Card
+                  key={idx}
+                  className="hover:shadow-xl transition rounded-xl p-4 bg-white"
+                >
+                  <CardContent>
+                    <p className="text-gray-800 mb-3">{item}</p>
+                    <Button
+                      className="w-full"
+                      onClick={() => handleCopy(item)}
+                    >
+                      Copier le prompt
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default App;
